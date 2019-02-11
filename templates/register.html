@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    <title>注册</title>
+{% endblock %}
+
+{% block EXTCSS %}
+    <link rel="stylesheet" href="{% static '/mine/css/register.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="register">
+    <div class="back">
+        <a href="{% url 'axf:mine' %}"><span class="glyphicon glyphicon-remove"></span></a>
+    </div>
+
+    <form action="{% url 'axf:register' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+        <div class="input-group">
+          <span class="input-group-addon" id="basic-addon1">账号</span>
+          <input type="text" class="form-control" placeholder="账号" aria-describedby="basic-addon1" name="account" id="account">
+        </div>
+        <div class="error" id="accounterr">用户名已存在</div>
+
+        <div class="input-group">
+          <span class="input-group-addon" id="basic-addon1">密码</span>
+          <input type="password" class="form-control" placeholder="6-16位密码" aria-describedby="basic-addon1" name="password" id="password">
+        </div>
+        <div class="error" id="passworderr">密码格式不正确</div>
+
+        <div class="input-group">
+          <span class="input-group-addon" id="basic-addon1">验证</span>
+          <input type="password" class="form-control" placeholder="请再次输入密码" aria-describedby="basic-addon1" name="mypassword" id="mypassword">
+        </div>
+        <div class="error" id="mypassworderr">密码不一致</div>
+        <div class="input-group">
+          <span class="input-group-addon" id="basic-addon1">昵称</span>
+          <input type="text" class="form-control" placeholder="昵称" aria-describedby="basic-addon1" name="name" id="name">
+        </div>
+        <div class="input-group">
+          <span class="input-group-addon" id="basic-addon1">电话</span>
+          <input type="text" class="form-control" placeholder="电话" aria-describedby="basic-addon1" name="tel" id="tel">
+        </div>
+        <div class="input-group">
+          <span class="input-group-addon" id="basic-addon1">地址</span>
+          <input type="text" class="form-control" placeholder="地址" aria-describedby="basic-addon1" name="address" id="address">
+        </div>
+        <div class="form-group">
+            <input type="file" name="file"/>
+        </div>
+        <input type="submit" value="注册" id="subButton" class="btn btn-primary">
+    </form>
+</div>
+{% endblock %}
+
+{% block EXTJS %}
+    <script src="{% static 'mine/js/registe.js'%}"></script>
+{% endblock %}
