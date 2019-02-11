@@ -1,8 +1,14 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+import hashlib
+import os
+import uuid
+
+from django.contrib.auth import logout
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render, redirect
 
 # Create your views here.
-from app.models import Wheel, Nav, Mustbuy, Shop, MainShow, Foodtypes, Goods
+from AXF import settings
+from app.models import Wheel, Nav, Mustbuy, Shop, MainShow, Foodtypes, Goods, User
 
 
 def home(request):
@@ -58,7 +64,7 @@ def market(request, categoryid, childid, sortid):
     # goodslist = Goods.objects.all()[1:10]
 
     # 根据商品分类 数据过滤
-    print(childid)
+    # print(childid)
     if childid == '0':  # 全部分类
         goodslist = Goods.objects.filter(categoryid=categoryid)
     else:  # 对应分类
@@ -91,8 +97,89 @@ def cart(request):
 
 
 def mine(request):
-    return render(request, 'mine.html')
+    token = request.session.get('token')
+    responseData = {}
+    if token:
+        user = User.objects.get(token=token)
+        print(user.name)
+        responseData['name'] = user.name
+        responseData['rank'] = user.rank
+        responseData['img'] = '/static/uploads/' + user.img
+        responseData['islogin'] = True
+    else:
+        responseData['name'] = '未登录'
+        responseData['rank'] = '无等级（未登录）'
+        responseData['img'] = '/static/uploads/axf.png'
+        responseData['islogin'] = False
+    return render(request, 'mine.html', context=responseData)
 
 
 def register(request):
-    return None
+    if request.method == 'POST':
+        user = User()
+        user.account = request.POST.get('account')
+        user.password = generate_password(request.POST.get('password'))
+        user.name = request.POST.get('name')
+        user.tel = request.POST.get('tel')
+        user.address = request.POST.get('address')
+
+        # 头像
+        imgName = user.account + '.png'
+        imgPath = os.path.join(settings.MEDIA_ROOT, imgName)
+        file = request.FILES.get('file')
+        with open(imgPath, 'wb') as fp:
+            for data in file.chunks():
+                fp.write(data)
+        user.img = imgName
+
+        # token
+        user.token = str(uuid.uuid5(uuid.uuid4(), 'register'))
+        user.save()
+
+        # session
+        request.session['token'] = user.token
+
+        return redirect('axf:mine')
+
+    elif request.method == 'GET':
+        return render(request, 'register.html')
+
+def generate_password(password):
+    sha = hashlib.sha512()
+    sha.update(password.encode('utf-8'))
+    return sha.hexdigest()
+
+
+def quit(request):
+    # request.session.flush()
+    logout(request)
+    return redirect('axf:mine')
+
+
+def login(request):
+    if request.method == 'POST':
+        account = request.POST.get('account')
+        password = generate_password(request.POST.get('password'))
+        try:
+            user = User.objects.get(account=account)
+            if user.password != password:
+                return render(request, 'login.html', context={'error': '账号或密码错误'})
+            else:
+                user.token = str(uuid.uuid5(uuid.uuid4(), 'login'))
+                user.save()
+                # 状态保持
+                request.session['token'] = user.token
+                return redirect('axf:mine')
+        except:
+            return render(request, 'login.html', context={'error':'账号或密码错误'})
+
+    elif request.method == 'GET':
+        return render(request, 'login.html')
+
+def checkuser(request):
+    account = request.GET.get('account')
+    try:
+        user = User.objects.get(account=account)
+        return JsonResponse({'msg':'用户名已存在','status':-1})
+    except:
+        return JsonResponse({'msg':'用户名可用','status':1})

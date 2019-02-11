@@ -13,6 +13,12 @@ urlpatterns = [
 
     url(r'^mine/$', views.mine, name='mine'),
 
-    url(r'^register/$', views.register, name='register')
+    url(r'^register/$', views.register, name='register'),
+
+    url(r'^quit/$', views.quit, name='quit'),
+
+    url(r'^login/$', views.login, name='login'),
+
+    url(r'^checkuser/$', views.checkuser, name='checkuser')
 
 ]
