@@ -92,3 +92,7 @@ def cart(request):
 
 def mine(request):
     return render(request, 'mine.html')
+
+
+def register(request):
+    return None

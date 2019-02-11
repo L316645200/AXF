@@ -13,4 +13,6 @@ urlpatterns = [
 
     url(r'^mine/$', views.mine, name='mine'),
 
+    url(r'^register/$', views.register, name='register')
+
 ]
