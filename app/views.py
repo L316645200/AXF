@@ -183,3 +183,17 @@ def checkuser(request):
         return JsonResponse({'msg':'用户名已存在','status':-1})
     except:
         return JsonResponse({'msg':'用户名可用','status':1})
+
+
+def addcart(request):
+    goodsid = request.GET.get('goodsid')
+    token = request.session.get('token')
+    ResponseData = {}
+    ResponseData['goodsid'] = token
+    ResponseData['token'] = goodsid
+
+    if token:
+        pass
+    else:
+        pass
+    return JsonResponse(ResponseData)

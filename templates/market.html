@@ -11,8 +11,8 @@
 
 
 {% block content %}
-{# 侧边栏 #}
 <div class="market">
+{# 侧边栏 #}
     <div class="type-slider">
         <ul>
             {% for foodtype in foodtypes %}
@@ -63,8 +63,8 @@
                         {#                      按钮操作#}
                         <div class="bt-wrapper">
                             <span class="glyphicon glyphicon-minus"></span>
-                            <span class="num">3</span>
-                            <span class="glyphicon glyphicon-plus"></span>
+                            <span class="num"></span>
+                            <span class="glyphicon glyphicon-plus" goodsid="{{ goods.id }}"></span>
                         </div></a>
 
 

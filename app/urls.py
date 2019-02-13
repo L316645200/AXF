@@ -19,6 +19,8 @@ urlpatterns = [
 
     url(r'^login/$', views.login, name='login'),
 
-    url(r'^checkuser/$', views.checkuser, name='checkuser')
+    url(r'^checkuser/$', views.checkuser, name='checkuser'),
+
+    url(r'^addcart/$', views.addcart, name='addcart')
 
 ]

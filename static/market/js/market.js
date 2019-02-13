@@ -2,7 +2,7 @@ $(function () {
 
     // 获取下标 typeIndex
     typeIndex = $.cookie('typeIndex')
-    console.log(typeIndex)
+    // console.log(typeIndex)
     if(typeIndex){  // 存在，对应分类
         $('.type-slider .type-item').eq(typeIndex).addClass('active')
     } else {    // 不存在，默认就是热榜
@@ -63,6 +63,13 @@ $(function () {
         sortBt = false
         $('.bounce-view.sort-view').hide()
         $('#sortBt b').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up')
+    })
+
+    $('.glyphicon-plus').click(function () {
+        var goodsid = $(this).val()
+        $.get('/axf/addcart/', {'goodsid':goodsid}, function (response) {
+            console.log(response)
+        })
     })
 
 })
