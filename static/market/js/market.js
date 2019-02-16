@@ -65,10 +65,49 @@ $(function () {
         $('#sortBt b').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up')
     })
 
+    // 默认隐藏购物车减操作
+    $('.bt-wrapper>.glyphicon-minus').hide()
+    $('.bt-wrapper>.num').hide()
+
+    // 购物车数据不为0， 即显示
+    $('.bt-wrapper>.num').each(function () {
+        if (parseInt($(this).html())){
+            $(this).show()
+            $(this).prev().show()
+        }
+
+    })
+
+    // 加操作
     $('.glyphicon-plus').click(function () {
-        var goodsid = $(this).val()
+        var goodsid = $(this).attr('goodsid')
+
+        var $that = $(this)
         $.get('/axf/addcart/', {'goodsid':goodsid}, function (response) {
-            console.log(response)
+            if(response['status'] == -1) {
+                console.log(response)
+                window.open('/axf/login/', target='_self')
+            }else {
+                console.log(response)
+                $that.prev().html(response['number']).show()
+                $that.prev().prev().show()
+            }
+        })
+    })
+
+    // 减操作
+    $('.bt-wrapper>.glyphicon-minus').click(function () {
+        var goodsid = $(this).attr('goodsid')
+
+        var $that = $(this)
+        $.get('/axf/subcart/', {'goodsid':goodsid}, function (response) {
+            console.log(1)
+            if(parseInt(response['number']) > 0){
+                $that.next().html(response['number']).show()
+            }else {
+                $that.hide()
+                $that.next().hide()
+            }
         })
     })
 

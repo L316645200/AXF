@@ -100,3 +100,15 @@ footer .mine dd {
 .mine .other .quit a{
     color: grey;
 }
+
+section ul li .item{
+    position: relative;
+}
+
+section ul li dl dt .badge{
+    background: red;
+    color: white;
+    position: absolute;
+    right: 10px;
+    top: 0;
+}
